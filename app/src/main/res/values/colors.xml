@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VS Code Dark+ Theme Colors -->
+
+    <!-- Backgrounds -->
+    <color name="vscode_bg">#1E1E1E</color>
+    <color name="vscode_sidebar">#252526</color>
+    <color name="vscode_titlebar">#3C3C3C</color>
+    <color name="vscode_tab_bar">#2D2D2D</color>
+    <color name="vscode_panel_header">#2D2D2D</color>
+    <color name="vscode_terminal_bg">#1E1E1E</color>
+    <color name="vscode_statusbar">#007ACC</color>
+    <color name="vscode_input_bg">#3C3C3C</color>
+    <color name="vscode_dropdown_bg">#252526</color>
+    <color name="vscode_hover_bg">#2A2D2E</color>
+    <color name="vscode_selection_bg">#264F78</color>
+
+    <!-- Text -->
+    <color name="vscode_text">#D4D4D4</color>
+    <color name="vscode_text_muted">#8A8A8A</color>
+    <color name="vscode_tab_text_active">#FFFFFF</color>
+    <color name="vscode_tab_text_inactive">#8A8A8A</color>
+    <color name="vscode_sidebar_text">#CCCCCC</color>
+    <color name="vscode_sidebar_text_muted">#6A6A6A</color>
+    <color name="vscode_sidebar_section_header">#BBBBBB</color>
+    <color name="vscode_statusbar_text">#FFFFFF</color>
+
+    <!-- Accents -->
+    <color name="vscode_accent">#007ACC</color>
+    <color name="vscode_accent_hover">#1A85FF</color>
+    <color name="vscode_focus_border">#007FD4</color>
+
+    <!-- Icons -->
+    <color name="vscode_icon">#C5C5C5</color>
+    <color name="vscode_icon_active">#FFFFFF</color>
+
+    <!-- Borders / Dividers -->
+    <color name="vscode_border">#454545</color>
+    <color name="vscode_tab_active_border">#007ACC</color>
+
+    <!-- Syntax highlight colors (used by extensions/themes) -->
+    <color name="syntax_keyword">#569CD6</color>
+    <color name="syntax_string">#CE9178</color>
+    <color name="syntax_comment">#6A9955</color>
+    <color name="syntax_number">#B5CEA8</color>
+    <color name="syntax_function">#DCDCAA</color>
+    <color name="syntax_type">#4EC9B0</color>
+    <color name="syntax_variable">#9CDCFE</color>
+
+    <!-- File icon colors -->
+    <color name="file_icon_js">#CBCB41</color>
+    <color name="file_icon_ts">#519ABA</color>
+    <color name="file_icon_py">#3572A5</color>
+    <color name="file_icon_java">#B07219</color>
+    <color name="file_icon_html">#E44D26</color>
+    <color name="file_icon_css">#563D7C</color>
+    <color name="file_icon_json">#CBCB41</color>
+    <color name="file_icon_md">#519ABA</color>
+    <color name="file_icon_folder">#DCB67A</color>
+
+    <!-- Terminal colors (ANSI) -->
+    <color name="terminal_black">#000000</color>
+    <color name="terminal_red">#CD3131</color>
+    <color name="terminal_green">#0DBC79</color>
+    <color name="terminal_yellow">#E5E510</color>
+    <color name="terminal_blue">#2472C8</color>
+    <color name="terminal_magenta">#BC3FBC</color>
+    <color name="terminal_cyan">#11A8CD</color>
+    <color name="terminal_white">#E5E5E5</color>
+    <color name="terminal_bright_black">#666666</color>
+    <color name="terminal_bright_red">#F14C4C</color>
+    <color name="terminal_bright_green">#23D18B</color>
+    <color name="terminal_bright_yellow">#F5F543</color>
+    <color name="terminal_bright_blue">#3B8EEA</color>
+    <color name="terminal_bright_magenta">#D670D6</color>
+    <color name="terminal_bright_cyan">#29B8DB</color>
+    <color name="terminal_bright_white">#FFFFFF</color>
+
+    <!-- General -->
+    <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+</resources>

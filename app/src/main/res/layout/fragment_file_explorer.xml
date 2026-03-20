@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/vscode_sidebar">
+
+    <!-- Explorer header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:background="@color/vscode_sidebar">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="EXPLORER"
+            android:textColor="@color/vscode_sidebar_section_header"
+            android:textSize="11sp"
+            android:letterSpacing="0.1" />
+
+        <ImageButton
+            android:id="@+id/btn_new_file"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_new_file"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/vscode_icon"
+            android:contentDescription="New File" />
+
+        <ImageButton
+            android:id="@+id/btn_new_folder"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_new_folder"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/vscode_icon"
+            android:contentDescription="New Folder"
+            android:layout_marginStart="2dp" />
+
+        <ImageButton
+            android:id="@+id/btn_refresh"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_refresh"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/vscode_icon"
+            android:contentDescription="Refresh"
+            android:layout_marginStart="2dp" />
+
+        <ImageButton
+            android:id="@+id/btn_explorer_home"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_home"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/vscode_icon"
+            android:contentDescription="Home"
+            android:layout_marginStart="2dp" />
+
+    </LinearLayout>
+
+    <!-- Current path breadcrumb -->
+    <TextView
+        android:id="@+id/current_path_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:text="~"
+        android:textColor="@color/vscode_sidebar_text_muted"
+        android:textSize="11sp"
+        android:singleLine="true"
+        android:ellipsize="start" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/vscode_border" />
+
+    <!-- File tree -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/file_tree"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:overScrollMode="never"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
+
+</LinearLayout>

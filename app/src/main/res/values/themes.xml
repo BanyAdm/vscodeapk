@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.VSCode" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/vscode_accent</item>
+        <item name="colorPrimaryVariant">@color/vscode_accent</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSurface">@color/vscode_bg</item>
+        <item name="colorOnSurface">@color/vscode_text</item>
+        <item name="android:colorBackground">@color/vscode_bg</item>
+        <item name="android:windowBackground">@color/vscode_bg</item>
+        <item name="android:statusBarColor">@color/vscode_titlebar</item>
+        <item name="android:navigationBarColor">@color/vscode_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:textColorPrimary">@color/vscode_text</item>
+        <item name="android:textColorSecondary">@color/vscode_text_muted</item>
+
+        <!-- Toolbar style -->
+        <item name="toolbarStyle">@style/VSCodeToolbar</item>
+
+        <!-- Tab layout style -->
+        <item name="tabStyle">@style/VSCodeTab</item>
+
+        <!-- AlertDialog style -->
+        <item name="alertDialogTheme">@style/VSCodeAlertDialog</item>
+
+        <!-- Scrollbar -->
+        <item name="android:scrollbarThumbVertical">@drawable/scrollbar_thumb</item>
+    </style>
+
+    <style name="VSCodeToolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:background">@color/vscode_titlebar</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="titleTextColor">@color/vscode_text</item>
+        <item name="subtitleTextColor">@color/vscode_text_muted</item>
+    </style>
+
+    <style name="VSCodeTab" parent="Widget.MaterialComponents.TabLayout">
+        <item name="android:background">@color/vscode_tab_bar</item>
+        <item name="tabTextAppearance">@style/VSCodeTabText</item>
+        <item name="tabIndicatorColor">@color/vscode_accent</item>
+        <item name="tabRippleColor">@color/vscode_hover_bg</item>
+    </style>
+
+    <style name="VSCodeTabText" parent="TextAppearance.MaterialComponents.Tab">
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">monospace</item>
+    </style>
+
+    <style name="VSCodeAlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:colorBackground">@color/vscode_dropdown_bg</item>
+        <item name="android:textColorPrimary">@color/vscode_text</item>
+        <item name="colorAccent">@color/vscode_accent</item>
+    </style>
+
+    <!-- Splash screen theme -->
+    <style name="Theme.VSCode.Splash" parent="Theme.VSCode">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+</resources>

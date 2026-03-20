@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.vscodeandroid'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.vscodeandroid"
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    packagingOptions {
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
+    }
+}
+
+dependencies {
+    // AndroidX Core
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    implementation 'androidx.slidingpanelayout:slidingpanelayout:1.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.7.0'
+    implementation 'androidx.activity:activity:1.8.2'
+    implementation 'androidx.fragment:fragment:1.6.2'
+
+    // Terminal emulator - Termux's own terminal-view library from GitHub packages
+    // Clone https://github.com/termux/termux-app and build terminal-view module
+    // Then add as local module: implementation project(':terminal-view')
+    // OR use the prebuilt AAR dropped into app/libs/
+    implementation fileTree(dir: 'libs', include: ['*.aar', '*.jar'])
+
+    // WebSocket client for Termux socket bridge
+    implementation 'org.java-websocket:Java-WebSocket:1.5.4'
+
+    // File utilities
+    implementation 'commons-io:commons-io:2.15.1'
+
+    // JSON parsing
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // SSH (for remote development feature)
+    implementation 'com.github.mwiede:jsch:0.2.17'
+
+    // Coroutines (async tasks)
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+
+    // Preference
+    implementation 'androidx.preference:preference:1.2.1'
+}

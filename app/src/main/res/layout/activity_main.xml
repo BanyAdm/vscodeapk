@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/vscode_bg">
+
+    <!-- Main content area -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Top toolbar (VS Code menu bar) -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/vscode_titlebar"
+            android:elevation="2dp"
+            app:layout_scrollFlags="noScroll" />
+
+        <!-- Editor tab bar -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/editor_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginTop="40dp"
+            android:background="@color/vscode_tab_bar"
+            app:tabBackground="@color/vscode_tab_bar"
+            app:tabTextColor="@color/vscode_tab_text_inactive"
+            app:tabSelectedTextColor="@color/vscode_tab_text_active"
+            app:tabIndicatorColor="@color/vscode_accent"
+            app:tabIndicatorHeight="1dp"
+            app:tabPaddingStart="8dp"
+            app:tabPaddingEnd="8dp"
+            app:tabMinWidth="80dp"
+            app:tabMode="scrollable" />
+
+        <!-- VS Code WebView (the main editor) -->
+        <com.vscodeandroid.editor.VSCodeWebView
+            android:id="@+id/vscode_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="75dp"
+            android:layout_marginBottom="0dp" />
+
+        <!-- Terminal bottom sheet panel -->
+        <LinearLayout
+            android:id="@+id/terminal_panel"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:background="@color/vscode_terminal_bg"
+            android:elevation="8dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="300dp"
+            app:behavior_skipCollapsed="false">
+
+            <!-- Terminal header bar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:orientation="horizontal"
+                android:background="@color/vscode_panel_header"
+                android:gravity="center_vertical"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp">
+
+                <!-- Tab scroll for multiple terminal sessions -->
+                <HorizontalScrollView
+                    android:id="@+id/terminal_tab_scroll"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/terminal_tab_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- Terminal tabs added programmatically -->
+
+                        <ImageButton
+                            android:id="@+id/btn_add_terminal_tab"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/ic_add"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:tint="@color/vscode_icon"
+                            android:contentDescription="New Terminal" />
+
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+                <!-- Terminal action buttons -->
+                <ImageButton
+                    android:id="@+id/btn_new_terminal"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_add"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@color/vscode_icon"
+                    android:contentDescription="New Terminal"
+                    android:layout_marginEnd="4dp" />
+
+                <ImageButton
+                    android:id="@+id/btn_maximize_terminal"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_maximize"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@color/vscode_icon"
+                    android:contentDescription="Maximize"
+                    android:layout_marginEnd="4dp" />
+
+                <ImageButton
+                    android:id="@+id/btn_close_terminal"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/ic_close"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@color/vscode_icon"
+                    android:contentDescription="Close Terminal" />
+
+            </LinearLayout>
+
+            <!-- Terminal view container -->
+            <FrameLayout
+                android:id="@+id/terminal_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/vscode_terminal_bg" />
+
+        </LinearLayout>
+
+        <!-- Status bar at bottom -->
+        <LinearLayout
+            android:id="@+id/status_bar"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_gravity="bottom"
+            android:background="@color/vscode_statusbar"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp">
+
+            <TextView
+                android:id="@+id/status_branch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⎇ main"
+                android:textColor="@color/vscode_statusbar_text"
+                android:textSize="11sp"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/status_language"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Plain Text"
+                android:textColor="@color/vscode_statusbar_text"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- Left Drawer: File Explorer -->
+    <LinearLayout
+        android:id="@+id/file_explorer_container"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/vscode_sidebar"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/file_explorer_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

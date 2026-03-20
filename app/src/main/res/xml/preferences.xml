@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Editor">
+        <SwitchPreferenceCompat
+            app:key="word_wrap"
+            app:title="Word Wrap"
+            app:defaultValue="false" />
+        <SeekBarPreference
+            app:key="font_size"
+            app:title="Font Size"
+            android:max="24"
+            app:min="10"
+            app:defaultValue="13"
+            app:showSeekBarValue="true" />
+        <SwitchPreferenceCompat
+            app:key="minimap"
+            app:title="Minimap"
+            app:defaultValue="true" />
+        <SwitchPreferenceCompat
+            app:key="line_numbers"
+            app:title="Line Numbers"
+            app:defaultValue="true" />
+        <ListPreference
+            app:key="tab_size"
+            app:title="Tab Size"
+            app:entries="@array/tab_sizes"
+            app:entryValues="@array/tab_sizes"
+            app:defaultValue="4" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Terminal">
+        <SeekBarPreference
+            app:key="terminal_font_size"
+            app:title="Terminal Font Size"
+            android:max="20"
+            app:min="10"
+            app:defaultValue="13"
+            app:showSeekBarValue="true" />
+        <EditTextPreference
+            app:key="terminal_shell"
+            app:title="Shell"
+            app:defaultValue="/data/data/com.termux/files/usr/bin/bash"
+            app:summary="Path to shell binary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Termux Bridge">
+        <EditTextPreference
+            app:key="bridge_port"
+            app:title="Bridge Port"
+            app:defaultValue="9999"
+            app:summary="Port used for command execution bridge" />
+        <EditTextPreference
+            app:key="terminal_port"
+            app:title="Terminal Port"
+            app:defaultValue="10000"
+            app:summary="Port used for interactive terminal sessions" />
+        <Preference
+            app:key="rerun_setup"
+            app:title="Re-run Setup"
+            app:summary="Run the Termux setup script again" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="Appearance">
+        <ListPreference
+            app:key="theme"
+            app:title="Theme"
+            app:entries="@array/themes"
+            app:entryValues="@array/theme_values"
+            app:defaultValue="dark_plus" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

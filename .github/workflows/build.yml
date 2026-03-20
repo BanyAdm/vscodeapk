@@ -1,0 +1,83 @@
+name: Build VS Code Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Create gradle.properties
+        run: |
+          echo "android.useAndroidX=true" >> gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
+          echo "org.gradle.jvmargs=-Xmx4g" >> gradle.properties
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y --fix-missing libkrb5-dev libx11-dev libxkbfile-dev libsecret-1-dev
+
+      - name: Remove termux library dependency
+        run: sed -i "s|implementation fileTree(dir: 'libs', include: \['\*.aar', '\*.jar'\])||g" app/build.gradle
+
+      - name: Generate drawables
+        run: |
+          mkdir -p app/src/main/res/drawable
+          for name in ic_add ic_close ic_close_small ic_maximize ic_folder ic_file_generic ic_file_java ic_file_js ic_file_python ic_file_html ic_file_css ic_file_json ic_file_markdown ic_file_shell ic_file_xml ic_file_image ic_new_file ic_new_folder ic_refresh ic_home ic_terminal ic_launcher; do
+            echo '<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24"><path android:fillColor="#C5C5C5" android:pathData="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2z"/></vector>' > app/src/main/res/drawable/${name}.xml
+          done
+          echo '<?xml version="1.0" encoding="utf-8"?><selector xmlns:android="http://schemas.android.com/apk/res/android"><item android:state_selected="true" android:drawable="@color/vscode_selection_bg"/><item android:state_pressed="true" android:drawable="@color/vscode_hover_bg"/><item android:drawable="@color/transparent"/></selector>' > app/src/main/res/drawable/file_item_selector.xml
+          echo '<?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="@color/vscode_panel_header"/></shape>' > app/src/main/res/drawable/terminal_tab_bg.xml
+          echo '<?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="@color/vscode_terminal_bg"/></shape>' > app/src/main/res/drawable/terminal_tab_active_bg.xml
+          echo '<?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#555555"/><corners android:radius="4dp"/></shape>' > app/src/main/res/drawable/scrollbar_thumb.xml
+          echo '<?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#1E1E1E"/></shape>' > app/src/main/res/drawable/splash_background.xml
+
+      - name: Create dummy VS Code assets
+        run: |
+          mkdir -p app/src/main/assets/vscode
+          echo "<html><body>loading...</body></html>" > app/src/main/assets/vscode/index.html
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build debug APK with dummy assets
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Clone VS Code and build web
+        run: |
+          git clone --depth=1 --branch 1.96.4 https://github.com/microsoft/vscode.git vscode-src
+          cd vscode-src
+          npm install
+          npx gulp vscode-web
+
+      - name: Replace dummy assets with real VS Code
+        run: |
+          rm -rf app/src/main/assets/vscode
+          mkdir -p app/src/main/assets/vscode
+          cp -r vscode-src/out-vscode-web/* app/src/main/assets/vscode/
+
+      - name: Build final APK with VS Code
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: VSCodeAndroid-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30

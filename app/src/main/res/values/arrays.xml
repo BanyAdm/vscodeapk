@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="tab_sizes">
+        <item>2</item>
+        <item>4</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="themes">
+        <item>Dark+ (default dark)</item>
+        <item>Light+</item>
+        <item>Monokai</item>
+        <item>Solarized Dark</item>
+    </string-array>
+
+    <string-array name="theme_values">
+        <item>dark_plus</item>
+        <item>light_plus</item>
+        <item>monokai</item>
+        <item>solarized_dark</item>
+    </string-array>
+</resources>
