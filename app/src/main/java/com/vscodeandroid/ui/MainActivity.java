@@ -20,7 +20,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.vscodeandroid.R;
 import com.vscodeandroid.bridge.JavascriptBridge;
 import com.vscodeandroid.bridge.TermuxBridge;
-import com.vscodeandroid.databinding.ActivityMainBinding;
 import com.vscodeandroid.editor.EditorViewModel;
 import com.vscodeandroid.editor.VSCodeWebView;
 import com.vscodeandroid.filesystem.FileExplorerFragment;
@@ -31,7 +30,7 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    public TerminalFragment terminalFragment;
     private EditorViewModel viewModel;
     private VSCodeWebView vsCodeWebView;
     private TerminalFragment terminalFragment;
@@ -42,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
         viewModel = new ViewModelProvider(this).get(EditorViewModel.class);
         termuxBridge = new TermuxBridge(this);
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(findViewById(R.id.toolbar));
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
@@ -82,24 +80,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, binding.drawerLayout, binding.toolbar,
+                this, findViewById(R.id.drawer_layout), findViewById(R.id.toolbar),
                 R.string.drawer_open, R.string.drawer_close);
-        binding.drawerLayout.addDrawerListener(toggle);
+        findViewById(R.id.drawer_layout).addDrawerListener(toggle);
         toggle.syncState();
 
         // Default: show sidebar on tablets, hide on phones
         if (getResources().getBoolean(R.bool.is_tablet)) {
-            binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            findViewById(R.id.drawer_layout).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
         }
     }
 
     private void setupVSCodeWebView() {
-        vsCodeWebView = binding.vscodeWebview;
+        vsCodeWebView = findViewById(R.id.vscode_webview);
         vsCodeWebView.initialize(this, new JavascriptBridge(this, this));
     }
 
     private void setupTerminalPanel() {
-        terminalSheetBehavior = BottomSheetBehavior.from(binding.terminalPanel);
+        terminalSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.terminal_panel));
         terminalSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         terminalSheetBehavior.setPeekHeight(300);
 
@@ -108,13 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 .replace(R.id.terminal_container, terminalFragment)
                 .commit();
 
-        binding.btnCloseTerminal.setOnClickListener(v -> hideTerminal());
-        binding.btnNewTerminal.setOnClickListener(v -> openNewTerminal());
-        binding.btnMaximizeTerminal.setOnClickListener(v -> toggleTerminalMaximize());
+        findViewById(R.id.btn_close_terminal).setOnClickListener(v -> hideTerminal());
+        findViewById(R.id.btn_new_terminal).setOnClickListener(v -> openNewTerminal());
+        findViewById(R.id.btn_maximize_terminal).setOnClickListener(v -> toggleTerminalMaximize());
     }
 
     private void setupTabBar() {
-        binding.editorTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        findViewById(R.id.editor_tab_layout).addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getTag() instanceof File) {
@@ -128,12 +126,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupObservers() {
         viewModel.getOpenFiles().observe(this, files -> {
-            binding.editorTabLayout.removeAllTabs();
+            findViewById(R.id.editor_tab_layout).removeAllTabs();
             for (File f : files) {
-                TabLayout.Tab tab = binding.editorTabLayout.newTab();
+                TabLayout.Tab tab = findViewById(R.id.editor_tab_layout).newTab();
                 tab.setText(f.getName());
                 tab.setTag(f);
-                binding.editorTabLayout.addTab(tab);
+                findViewById(R.id.editor_tab_layout).addTab(tab);
             }
         });
 
@@ -216,11 +214,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
-        if (id == R.id.action_open_folder) {
+        if (id == R.id.btn_new_terminal) {
             openFolderPicker();
             return true;
         }
@@ -260,8 +258,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (terminalVisible) {
             hideTerminal();
-        } else if (binding.drawerLayout.isOpen()) {
-            binding.drawerLayout.close();
+        } else if (findViewById(R.id.drawer_layout).isOpen()) {
+            findViewById(R.id.drawer_layout).close();
         } else {
             super.onBackPressed();
         }
