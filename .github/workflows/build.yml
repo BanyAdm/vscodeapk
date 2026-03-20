@@ -25,19 +25,12 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Download and extract VS Code web
+      - name: Download VS Code web
         run: |
-          mkdir -p app/src/main/assets/vscode
           curl -L "https://update.code.visualstudio.com/1.96.4/web-standalone/stable" -o vscode-web.tar.gz
           tar -xzf vscode-web.tar.gz
-          ls -la
-          find . -maxdepth 3 -name "index.html" | grep -v node_modules
-          cp -r vscode-web/. app/src/main/assets/vscode/ 2>/dev/null ||           cp -r VSCode-web-standalone/. app/src/main/assets/vscode/ 2>/dev/null ||           find . -name "workbench.web.main.js" | head -1 | xargs dirname | xargs -I{} cp -r {}/../../../.. app/src/main/assets/vscode/ 2>/dev/null || true
+          mkdir -p app/src/main/assets/vscode
+          cp -r vscode-web/. app/src/main/assets/vscode/
           ls -la app/src/main/assets/vscode/
 
       - name: Remove fileTree dependency
