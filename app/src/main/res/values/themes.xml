@@ -42,7 +42,7 @@
         <item name="tabRippleColor">@color/vscode_hover_bg</item>
     </style>
 
-    <style name="VSCodeTabText" parent="TextAppearance.MaterialComponents.Tab">
+    <style name="VSCodeTabText" parent="TextAppearance.AppCompat.Small">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">monospace</item>
     </style>
