@@ -46,7 +46,7 @@ public class JavascriptBridge {
         mainActivity.runOnUiThread(() -> {
             mainActivity.showTerminal();
             if (workingDirectory != null && !workingDirectory.isEmpty()) {
-                mainActivity.getTerminalFragment().setWorkingDirectory(workingDirectory);
+                mainActivity.terminalFragment.setWorkingDirectory(workingDirectory);
             }
         });
     }
@@ -58,7 +58,7 @@ public class JavascriptBridge {
 
     @JavascriptInterface
     public void sendTerminalInput(String input) {
-        mainActivity.getTerminalFragment().sendInput(input);
+        mainActivity.terminalFragment.sendInput(input);
     }
 
     // ─── File System ─────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ public class JavascriptBridge {
             String js = "window.vscodeAndroidBridge.processCallback('" + callbackId +
                         "', '" + escaped + "', " + exitCode + ");";
             mainActivity.runOnUiThread(() ->
-                mainActivity.getVsCodeWebView().evaluateJavascript(js, null));
+                mainActivity.binding.vscodeWebview.evaluateJavascript(js, null));
         });
     }
 

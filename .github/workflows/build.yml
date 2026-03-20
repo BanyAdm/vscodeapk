@@ -25,16 +25,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Download VS Code web
-        run: |
-          curl -L "https://update.code.visualstudio.com/1.96.4/web-standalone/stable" -o vscode-web.tar.gz
-          tar -xzf vscode-web.tar.gz
-          mkdir -p app/src/main/assets/vscode
-          cp -r vscode-web/. app/src/main/assets/vscode/
-          ls -la app/src/main/assets/vscode/
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
 
-      - name: Remove fileTree dependency
-        run: python3 -c "d=open('app/build.gradle').read(); open('app/build.gradle','w').write('\n'.join(l for l in d.splitlines() if 'fileTree' not in l))"
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y --fix-missing libkrb5-dev libx11-dev libxkbfile-dev libsecret-1-dev
+
+      - name: Remove termux library dependency
+        run: sed -i "s|implementation fileTree(dir: 'libs', include: \['\*.aar', '\*.jar'\])||g" app/build.gradle
 
       - name: Generate drawables
         run: |
@@ -48,10 +48,31 @@ jobs:
           echo '<?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><solid android:color="#555555"/><corners android:radius="4dp"/></shape>' > app/src/main/res/drawable/scrollbar_thumb.xml
           echo '<?xml version="1.0" encoding="utf-8"?><shape xmlns:android="http://schemas.android.com/apk/res/android"><solid android:color="#1E1E1E"/></shape>' > app/src/main/res/drawable/splash_background.xml
 
+      - name: Create dummy VS Code assets
+        run: |
+          mkdir -p app/src/main/assets/vscode
+          echo "<html><body>loading...</body></html>" > app/src/main/assets/vscode/index.html
+
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Build APK
+      - name: Build debug APK with dummy assets
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Clone VS Code and build web
+        run: |
+          git clone --depth=1 --branch 1.96.4 https://github.com/microsoft/vscode.git vscode-src
+          cd vscode-src
+          npm install
+          npx gulp vscode-web
+
+      - name: Replace dummy assets with real VS Code
+        run: |
+          rm -rf app/src/main/assets/vscode
+          mkdir -p app/src/main/assets/vscode
+          cp -r vscode-src/out-vscode-web/* app/src/main/assets/vscode/
+
+      - name: Build final APK with VS Code
         run: ./gradlew assembleDebug --stacktrace
 
       - name: Upload APK
