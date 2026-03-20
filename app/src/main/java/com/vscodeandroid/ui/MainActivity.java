@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,9 +32,10 @@ import java.io.File;
 public class MainActivity extends AppCompatActivity {
 
     public TerminalFragment terminalFragment;
+    public VSCodeWebView vsCodeWebView;
     private EditorViewModel viewModel;
-    private VSCodeWebView vsCodeWebView;
-    private TerminalFragment terminalFragment;
+    private DrawerLayout drawerLayout;
+    private TabLayout tabLayout;
     private TermuxBridge termuxBridge;
     private BottomSheetBehavior<View> terminalSheetBehavior;
     private boolean terminalVisible = false;
@@ -46,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         viewModel = new ViewModelProvider(this).get(EditorViewModel.class);
         termuxBridge = new TermuxBridge(this);
 
-        // Check if Termux is installed, if not launch setup
         if (!termuxBridge.isTermuxInstalled()) {
             startActivity(new Intent(this, SetupActivity.class));
             finish();
@@ -64,31 +65,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        setSupportActionBar(findViewById(R.id.toolbar));
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
     private void setupDrawer() {
-        // File explorer in left drawer
+        drawerLayout = findViewById(R.id.drawer_layout);
         FragmentManager fm = getSupportFragmentManager();
         if (fm.findFragmentById(R.id.file_explorer_container) == null) {
             fm.beginTransaction()
                     .replace(R.id.file_explorer_container, new FileExplorerFragment())
                     .commit();
         }
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, findViewById(R.id.drawer_layout), findViewById(R.id.toolbar),
+                this, drawerLayout, toolbar,
                 R.string.drawer_open, R.string.drawer_close);
-        findViewById(R.id.drawer_layout).addDrawerListener(toggle);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-
-        // Default: show sidebar on tablets, hide on phones
-        if (getResources().getBoolean(R.bool.is_tablet)) {
-            findViewById(R.id.drawer_layout).setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-        }
     }
 
     private void setupVSCodeWebView() {
@@ -97,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTerminalPanel() {
-        terminalSheetBehavior = BottomSheetBehavior.from(findViewById(R.id.terminal_panel));
+        View terminalPanel = findViewById(R.id.terminal_panel);
+        terminalSheetBehavior = BottomSheetBehavior.from(terminalPanel);
         terminalSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         terminalSheetBehavior.setPeekHeight(300);
 
@@ -112,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupTabBar() {
-        findViewById(R.id.editor_tab_layout).addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout = findViewById(R.id.editor_tab_layout);
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getTag() instanceof File) {
@@ -126,12 +125,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupObservers() {
         viewModel.getOpenFiles().observe(this, files -> {
-            findViewById(R.id.editor_tab_layout).removeAllTabs();
+            tabLayout.removeAllTabs();
             for (File f : files) {
-                TabLayout.Tab tab = findViewById(R.id.editor_tab_layout).newTab();
+                TabLayout.Tab tab = tabLayout.newTab();
                 tab.setText(f.getName());
                 tab.setTag(f);
-                findViewById(R.id.editor_tab_layout).addTab(tab);
+                tabLayout.addTab(tab);
             }
         });
 
@@ -149,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Called from JavascriptBridge when VS Code requests a new terminal
     public void showTerminal() {
         terminalVisible = true;
         terminalSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -176,6 +174,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public TerminalFragment getTerminalFragment() { return terminalFragment; }
+    public VSCodeWebView getVsCodeWebView() { return vsCodeWebView; }
+
     public void openFileInEditor(File file) {
         viewModel.openFile(file);
         vsCodeWebView.openFile(file);
@@ -195,39 +196,15 @@ public class MainActivity extends AppCompatActivity {
             Uri data = intent.getData();
             if (data != null) {
                 File file = new File(data.getPath());
-                if (file.exists()) {
-                    openFileInEditor(file);
-                }
+                if (file.exists()) openFileInEditor(file);
             }
         }
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Forward keyboard shortcuts to VS Code WebView
-        if (vsCodeWebView.handleKeyEvent(keyCode, event)) {
-            return true;
-        }
+        if (vsCodeWebView.handleKeyEvent(keyCode, event)) return true;
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            startActivity(new Intent(this, SettingsActivity.class));
-            return true;
-        }
-        if (id == R.id.btn_new_terminal) {
-            openFolderPicker();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void openFolderPicker() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        startActivityForResult(intent, 1001);
     }
 
     @Override
@@ -240,9 +217,7 @@ public class MainActivity extends AppCompatActivity {
                         treeUri,
                         Intent.FLAG_GRANT_READ_URI_PERMISSION |
                         Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                // Convert URI to path and open in explorer
-                String path = treeUri.getPath();
-                openFolderInExplorer(new File(path));
+                openFolderInExplorer(new File(treeUri.getPath()));
             }
         }
     }
@@ -258,8 +233,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (terminalVisible) {
             hideTerminal();
-        } else if (findViewById(R.id.drawer_layout).isOpen()) {
-            findViewById(R.id.drawer_layout).close();
+        } else if (drawerLayout.isOpen()) {
+            drawerLayout.close();
         } else {
             super.onBackPressed();
         }
