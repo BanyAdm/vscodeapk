@@ -34,7 +34,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y --fix-missing libkrb5-dev libx11-dev libxkbfile-dev libsecret-1-dev
 
       - name: Remove termux library dependency
-        run: sed -i "s|implementation fileTree(dir: 'libs', include: \['\*.aar', '\*.jar'\])||g" app/build.gradle
+        run: python3 -c "d=open('app/build.gradle').read(); open('app/build.gradle','w').write('\n'.join(l for l in d.splitlines() if 'fileTree' not in l))"
 
       - name: Generate drawables
         run: |
