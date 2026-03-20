@@ -71,7 +71,7 @@ public class VSCodeWebView extends WebView {
         // Load VS Code web from assets
         // The assets/vscode/ folder is the built output of:
         // git clone https://github.com/microsoft/vscode && yarn && yarn gulp vscode-web
-        loadUrl("file:///android_asset/vscode/index.html");
+        loadUrl("https://vscode.dev");
     }
 
     public void openFile(File file) {
